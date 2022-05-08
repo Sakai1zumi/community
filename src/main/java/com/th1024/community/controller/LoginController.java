@@ -100,4 +100,9 @@ public class LoginController implements CommunityConstant {
         }
     }
 
+    @RequestMapping(path = "/login", method = RequestMethod.POST) // 访问路径相同但是访问方式不同
+    public String login() {
+        
+        return null;
+    }
 }

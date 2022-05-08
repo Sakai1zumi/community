@@ -1,8 +1,10 @@
 package com.th1024.community;
 
 import com.th1024.community.bean.DiscussPost;
+import com.th1024.community.bean.LoginTicket;
 import com.th1024.community.bean.User;
 import com.th1024.community.dao.DiscussPostMapper;
+import com.th1024.community.dao.LoginTicketMapper;
 import com.th1024.community.dao.UserMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +27,9 @@ import java.util.List;
 public class MapperTests {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     @Autowired
     private DiscussPostMapper discussPostMapper;
@@ -72,5 +78,29 @@ public class MapperTests {
 
         int i = discussPostMapper.selectDiscussPostRows(0);
         System.out.println(i);
+    }
+
+    @Test
+    public void testInsertLoginTicket() {
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(101);
+        loginTicket.setTicket("abc123");
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + 1000 * 60 * 10));
+
+        loginTicketMapper.insertLoginTicket(loginTicket);
+    }
+
+    @Test
+    public void testSelectByTicket() {
+        String ticket = "abc123";
+        LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
+        System.out.println(loginTicket);
+    }
+
+    @Test
+    public void testUpdateStatus() {
+        String ticket = "abc123";
+        loginTicketMapper.updateStatus(ticket, 1);
     }
 }
