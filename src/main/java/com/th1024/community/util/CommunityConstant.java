@@ -15,4 +15,10 @@ public interface CommunityConstant {
     //激活失败
     int ACTIVATION_FAILURE = 2;
 
+    // 设置记住状态失效时间
+    int REMEMBER_EXPIRED_SECONDS = 60 * 60 * 24 * 100;
+
+    // 设置默认状态失效时间
+    int DEFAULT_EXPIRED_SECONDS = 60 * 60 * 24;
+
 }
