@@ -139,4 +139,14 @@ public class LoginController implements CommunityConstant {
         userService.logout(ticket);
         return "redirect:/index";
     }
+
+    @RequestMapping(path = "/forget", method = RequestMethod.GET)
+    public String getForgetPage() {
+        return "/site/forget";
+    }
+
+    @RequestMapping(path = "/forget", method = RequestMethod.POST)
+    public void forget(String yourEmail, String verifycode, Model model) {
+
+    }
 }
