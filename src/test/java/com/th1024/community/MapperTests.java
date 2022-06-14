@@ -103,4 +103,18 @@ public class MapperTests {
         String ticket = "abc123";
         loginTicketMapper.updateStatus(ticket, 1);
     }
+
+    @Test
+    public void testInsertDiscussPost() {
+        DiscussPost discussPost = new DiscussPost();
+        discussPost.setUserId(152);
+        discussPost.setTitle("嘻嘻");
+        discussPost.setContent("今天是个好日子");
+        discussPost.setType(0);
+        discussPost.setStatus(0);
+        discussPost.setCreateTime(new Date());
+        discussPost.setCommentCount(11);
+        discussPost.setScore(100.00);
+        discussPostMapper.insertDiscussPost(discussPost);
+    }
 }
