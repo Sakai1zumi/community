@@ -6,6 +6,7 @@ import com.th1024.community.bean.User;
 import com.th1024.community.dao.DiscussPostMapper;
 import com.th1024.community.dao.LoginTicketMapper;
 import com.th1024.community.dao.UserMapper;
+import com.th1024.community.service.DiscussPostService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class MapperTests {
 
     @Autowired
     private DiscussPostMapper discussPostMapper;
+
+    @Autowired
+    private DiscussPostService discussPostService;
 
     @Test
     public void testSelect() {
@@ -116,5 +120,19 @@ public class MapperTests {
         discussPost.setCommentCount(11);
         discussPost.setScore(100.00);
         discussPostMapper.insertDiscussPost(discussPost);
+    }
+
+    @Test
+    public void testAddDiscussPost() {
+        DiscussPost discussPost = new DiscussPost();
+        discussPost.setUserId(152);
+        discussPost.setTitle("嘻嘻1");
+        discussPost.setContent("今天是个好日子");
+        discussPost.setType(0);
+        discussPost.setStatus(0);
+        discussPost.setCreateTime(new Date());
+        discussPost.setCommentCount(11);
+        discussPost.setScore(100.00);
+        discussPostService.addDiscussPost(discussPost);
     }
 }

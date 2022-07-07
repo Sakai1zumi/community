@@ -47,4 +47,8 @@ public class DiscussPostService {
         // 调用数据访问层
         return discussPostMapper.insertDiscussPost(discussPost);
     }
+
+    public DiscussPost findDiscussPostById(int id) {
+        return discussPostMapper.selectDiscussPostById(id);
+    }
 }
