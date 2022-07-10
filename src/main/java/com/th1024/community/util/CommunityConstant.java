@@ -21,4 +21,10 @@ public interface CommunityConstant {
     // 设置默认状态失效时间
     int DEFAULT_EXPIRED_SECONDS = 60 * 60 * 24;
 
+    // 实体类型：帖子
+    int ENTITY_TYPE_POST = 1;
+
+    // 实体类型：评论
+    int ENTITY_TYPE_COMMENT = 2;
+
 }

@@ -1,8 +1,10 @@
 package com.th1024.community;
 
+import com.th1024.community.bean.Comment;
 import com.th1024.community.bean.DiscussPost;
 import com.th1024.community.bean.LoginTicket;
 import com.th1024.community.bean.User;
+import com.th1024.community.dao.CommentMapper;
 import com.th1024.community.dao.DiscussPostMapper;
 import com.th1024.community.dao.LoginTicketMapper;
 import com.th1024.community.dao.UserMapper;
@@ -37,6 +39,9 @@ public class MapperTests {
 
     @Autowired
     private DiscussPostService discussPostService;
+
+    @Autowired
+    private CommentMapper commentMapper;
 
     @Test
     public void testSelect() {
@@ -134,5 +139,15 @@ public class MapperTests {
         discussPost.setCommentCount(11);
         discussPost.setScore(100.00);
         discussPostService.addDiscussPost(discussPost);
+    }
+
+    @Test
+    public void testCommentMapper() {
+        List<Comment> comments = commentMapper.selectCommentsByEntity(1, 233, 0, 5);
+        for (Comment comment : comments) {
+            System.out.println(comment);
+        }
+
+        System.out.println(commentMapper.selectCountByEntity(1, 233));
     }
 }
