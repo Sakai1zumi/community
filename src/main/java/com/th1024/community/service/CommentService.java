@@ -2,8 +2,15 @@ package com.th1024.community.service;
 
 import com.th1024.community.bean.Comment;
 import com.th1024.community.dao.CommentMapper;
+import com.th1024.community.util.CommunityConstant;
+import com.th1024.community.util.CommunityUtil;
+import com.th1024.community.util.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
@@ -12,9 +19,15 @@ import java.util.List;
  * @create 2022-07-10 17:09
  */
 @Service
-public class CommentService {
+public class CommentService implements CommunityConstant {
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private SensitiveFilter sensitiveFilter;
+
+    @Autowired
+    private DiscussPostService discussPostService;
 
     public List<Comment> findCommentsByEntity(int entityType, int entityId, int offset, int limit) {
         return commentMapper.selectCommentsByEntity(entityType, entityId, offset, limit);
@@ -22,5 +35,24 @@ public class CommentService {
 
     public int findCountByEntity(int entityType, int entityId) {
         return commentMapper.selectCountByEntity(entityType, entityId);
+    }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+    public int addComment(Comment comment) {
+        if (comment == null) {
+            throw new IllegalArgumentException("参数不能为空！");
+        }
+
+        // 进行敏感词过滤和HTML字符转义
+        comment.setContent(sensitiveFilter.filter(comment.getContent()));
+        comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));
+        // 添加评论
+        int rows = commentMapper.insertComment(comment);
+        // 更新评论数量
+        if (comment.getEntityType() == ENTITY_TYPE_POST) { // 只在给帖子添加评论时更新
+            int count = commentMapper.selectCountByEntity(comment.getEntityType(), comment.getEntityId());
+            discussPostService.updateCommentCount(comment.getEntityId(), count);
+        }
+        return rows;
     }
 }
