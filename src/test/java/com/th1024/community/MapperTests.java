@@ -1,13 +1,7 @@
 package com.th1024.community;
 
-import com.th1024.community.bean.Comment;
-import com.th1024.community.bean.DiscussPost;
-import com.th1024.community.bean.LoginTicket;
-import com.th1024.community.bean.User;
-import com.th1024.community.dao.CommentMapper;
-import com.th1024.community.dao.DiscussPostMapper;
-import com.th1024.community.dao.LoginTicketMapper;
-import com.th1024.community.dao.UserMapper;
+import com.th1024.community.bean.*;
+import com.th1024.community.dao.*;
 import com.th1024.community.service.DiscussPostService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +36,9 @@ public class MapperTests {
 
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Test
     public void testSelect() {
@@ -151,5 +148,22 @@ public class MapperTests {
         System.out.println(commentMapper.selectCountByEntity(1, 233));
     }
 
+    @Test
+    public void testMessageMapper() {
+        List<Message> messages = messageMapper.selectConversations(111, 0, 10);
+        for (Message message : messages) {
+            System.out.println(message);
+        }
 
+        System.out.println(messageMapper.selectConversationCount(111));
+
+        messages = messageMapper.selectLetters("111_112", 0, 5);
+
+        for (Message message : messages) {
+            System.out.println(message);
+        }
+
+        System.out.println(messageMapper.selectLetterUnreadCount(111, null));
+        System.out.println(messageMapper.selectLetterUnreadCount(111, "111_112"));
+    }
 }
