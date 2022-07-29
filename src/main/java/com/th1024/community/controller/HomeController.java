@@ -7,7 +7,6 @@ import com.th1024.community.service.DiscussPostService;
 import com.th1024.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,7 +43,7 @@ public class HomeController {
             for (DiscussPost post : list) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", post);
-                User user = userService.findUser(post.getUserId());
+                User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
                 discussPosts.add(map);
             }
