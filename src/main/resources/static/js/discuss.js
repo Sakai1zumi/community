@@ -1,7 +1,7 @@
-function like(btn, entityType, entityId) {
+function like(btn, entityType, entityId, entityUserId) {
     $.post( /*发送post请求*/
         CONTEXT_PATH + "/like", /*提交的路径*/
-        {"entityType":entityType, "entityId":entityId}, /*携带的参数*/
+        {"entityType":entityType, "entityId":entityId, "entityUserId":entityUserId}, /*携带的参数*/
         function (data) { /*返回的数据*/
             data = $.parseJSON(data);
             if (data.code == 0) { /*点赞成功*/

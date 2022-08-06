@@ -2,6 +2,7 @@ package com.th1024.community.controller;
 
 import com.th1024.community.annotation.LoginRequired;
 import com.th1024.community.bean.User;
+import com.th1024.community.service.LikeService;
 import com.th1024.community.service.UserService;
 import com.th1024.community.util.CommunityUtil;
 import com.th1024.community.util.HostHolder;
@@ -50,6 +51,9 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -121,7 +125,21 @@ public class UserController {
         } catch (IOException e) {
             LOGGER.error("读取头像失败" + e.getMessage());
         }
+    }
 
+    // 处理个人主页请求
+    @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId") int userId, Model model) {
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("该用户不存在");
+        }
+        // 用户信息
+        model.addAttribute("user", user);
+        // 点赞数量
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
 
+        return "/site/profile";
     }
 }
