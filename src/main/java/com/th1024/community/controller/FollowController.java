@@ -1,7 +1,9 @@
 package com.th1024.community.controller;
 
+import com.th1024.community.bean.Event;
 import com.th1024.community.bean.Page;
 import com.th1024.community.bean.User;
+import com.th1024.community.event.EventProducer;
 import com.th1024.community.service.FollowService;
 import com.th1024.community.service.UserService;
 import com.th1024.community.util.CommunityConstant;
@@ -34,6 +36,9 @@ public class FollowController implements CommunityConstant {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     // 关注
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
@@ -42,6 +47,15 @@ public class FollowController implements CommunityConstant {
         User user = hostHolder.getUser();
 
         followService.follow(user.getId(), entityType, entityId);
+
+        // 触发关注事件
+        Event event = new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setUserId(user.getId())
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setEntityUserId(entityId);
+        eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0, "已关注！");
     }

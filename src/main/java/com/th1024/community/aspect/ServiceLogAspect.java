@@ -31,6 +31,9 @@ public class ServiceLogAspect {
     public void before(JoinPoint joinPoint) {
         // 记录日志格式：用户[1.2.3.4（ip）]在[xxx（时间）]访问了[com.th1024.community.service.xxx()].
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes(); // 可获取请求相关信息
+        if (attributes == null) {
+            return;
+        }
         HttpServletRequest request = attributes.getRequest(); //获取request对象
         String ip = request.getRemoteHost();// 获取当前访问的请求的ip地址
         String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());// 获取当前时间
