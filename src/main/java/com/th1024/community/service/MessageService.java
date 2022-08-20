@@ -60,7 +60,7 @@ public class MessageService {
         return messageMapper.selectNoticeCount(userId, topic);
     }
 
-    public int findMessageUnreadCount(int userId, String topic) {
+    public int findNoticeUnreadCount(int userId, String topic) {
         return messageMapper.selectNoticeUnreadCount(userId, topic);
     }
 
