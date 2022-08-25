@@ -1,9 +1,7 @@
 package com.th1024.community.controller;
 
-import com.th1024.community.bean.Comment;
-import com.th1024.community.bean.DiscussPost;
-import com.th1024.community.bean.Page;
-import com.th1024.community.bean.User;
+import com.th1024.community.bean.*;
+import com.th1024.community.event.EventProducer;
 import com.th1024.community.service.CommentService;
 import com.th1024.community.service.DiscussPostService;
 import com.th1024.community.service.LikeService;
@@ -43,6 +41,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title, String content) {
@@ -58,6 +59,14 @@ public class DiscussPostController implements CommunityConstant {
         discussPost.setContent(content);
         discussPost.setCreateTime(new Date());
         discussPostService.addDiscussPost(discussPost);
+
+        // 触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(discussPost.getId());
+        eventProducer.fireEvent(event);
 
         // 报错的情况之后统一处理
         return CommunityUtil.getJSONString(0, "发布成功");
