@@ -77,7 +77,7 @@ public class UserController implements CommunityConstant {
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImg, Model model) {
         if (headerImg == null) {
-            model.addAttribute("errot", "还未上传照片");
+            model.addAttribute("error", "还未上传照片");
             return "/site/setting";
         }
 
