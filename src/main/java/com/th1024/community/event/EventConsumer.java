@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.th1024.community.bean.DiscussPost;
 import com.th1024.community.bean.Event;
 import com.th1024.community.bean.Message;
+import com.th1024.community.dao.elasticsearch.DiscussPostRepository;
 import com.th1024.community.service.DiscussPostService;
 import com.th1024.community.service.ElasticsearchService;
 import com.th1024.community.service.MessageService;
@@ -90,5 +91,23 @@ public class EventConsumer implements CommunityConstant {
         // 将帖子存入es服务器中
         DiscussPost post = discussPostService.findDiscussPostById(event.getEntityId());
         elasticsearchService.saveDiscussPost(post);
+    }
+
+    // 消费删除帖子事件
+    @KafkaListener(topics = {TOPIC_DELETE})
+    public void handleDeleteMessage(ConsumerRecord record) {
+        if (record == null || record.value() == null) {
+            LOGGER.error("消息内容为空！");
+            return;
+        }
+
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if (event == null) {
+            LOGGER.error("消息格式错误！");
+            return;
+        }
+
+        // 将帖子从es服务器中删除
+        elasticsearchService.deleteDiscussPost(event.getEntityId());
     }
 }
