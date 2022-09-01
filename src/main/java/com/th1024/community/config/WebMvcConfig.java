@@ -1,5 +1,6 @@
 package com.th1024.community.config;
 
+import com.th1024.community.controller.interceptor.DataInterceptor;
 import com.th1024.community.controller.interceptor.LoginRequiredInterceptor;
 import com.th1024.community.controller.interceptor.LoginTicketInterceptor;
 import com.th1024.community.controller.interceptor.MessageInterceptor;
@@ -23,6 +24,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private MessageInterceptor messageInterceptor;
 
+    @Autowired
+    private DataInterceptor dataInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginTicketInterceptor)
@@ -33,6 +37,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpeg", "/**/*.jpg");
 
         registry.addInterceptor(messageInterceptor)
+                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpeg", "/**/*.jpg");
+
+        registry.addInterceptor(dataInterceptor)
                 .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpeg", "/**/*.jpg");
     }
 }
