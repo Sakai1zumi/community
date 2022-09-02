@@ -1,8 +1,12 @@
 package com.th1024.community.service;
 
 import com.th1024.community.dao.TestDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -23,6 +27,8 @@ import javax.annotation.PreDestroy;
 @Service
 @Scope("prototype") //设置该Bean为多实例
 public class TestService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestService.class);
 
     @Autowired
     private TestDao dao;
@@ -64,5 +70,16 @@ public class TestService {
                 return "ok";
             }
         });
+    }
+
+    // @Async：标注在方法上，可以使方法在多线程的环境下被异步地调用
+    @Async
+    public void execute1() {
+        LOGGER.debug("execute1");
+    }
+
+    @Scheduled(initialDelay = 10000, fixedRate = 1000)
+    public void execute2() {
+        LOGGER.debug("execute2");
     }
 }
