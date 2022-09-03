@@ -9,7 +9,9 @@ import com.th1024.community.service.UserService;
 import com.th1024.community.util.CommunityConstant;
 import com.th1024.community.util.CommunityUtil;
 import com.th1024.community.util.HostHolder;
+import com.th1024.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +46,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private EventProducer eventProducer;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title, String content) {
@@ -67,6 +72,11 @@ public class DiscussPostController implements CommunityConstant {
                 .setEntityType(ENTITY_TYPE_POST)
                 .setEntityId(discussPost.getId());
         eventProducer.fireEvent(event);
+
+        // 计算帖子的分数
+        String postScoreKey = RedisKeyUtil.getPostScoreKey();
+        // 应将数据存储在set中，无序的不可重复的数据类型
+        redisTemplate.opsForSet().add(postScoreKey, discussPost.getId());
 
         // 报错的情况之后统一处理
         return CommunityUtil.getJSONString(0, "发布成功");
@@ -183,6 +193,11 @@ public class DiscussPostController implements CommunityConstant {
                 .setEntityId(id)
                 .setEntityType(ENTITY_TYPE_POST);
         eventProducer.fireEvent(event);
+
+        // 计算帖子的分数
+        String postScoreKey = RedisKeyUtil.getPostScoreKey();
+        // 应将数据存储在set中，无序的不可重复的数据类型
+        redisTemplate.opsForSet().add(postScoreKey, id);
 
         return CommunityUtil.getJSONString(0);
     }

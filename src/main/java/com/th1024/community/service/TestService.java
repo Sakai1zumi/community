@@ -73,12 +73,12 @@ public class TestService {
     }
 
     // @Async：标注在方法上，可以使方法在多线程的环境下被异步地调用
-    @Async
+    //@Async
     public void execute1() {
         LOGGER.debug("execute1");
     }
 
-    @Scheduled(initialDelay = 10000, fixedRate = 1000)
+    //@Scheduled(initialDelay = 10000, fixedRate = 1000)
     public void execute2() {
         LOGGER.debug("execute2");
     }

@@ -8,7 +8,9 @@ import com.th1024.community.service.CommentService;
 import com.th1024.community.service.DiscussPostService;
 import com.th1024.community.util.CommunityConstant;
 import com.th1024.community.util.HostHolder;
+import com.th1024.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,9 @@ public class CommentController implements CommunityConstant {
 
     @Autowired
     private DiscussPostService discussPostService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @RequestMapping(path = "/add/{discussPostId}", method = RequestMethod.POST)
     public String addComment(@PathVariable("discussPostId") int discussPostId, Comment comment) {
@@ -67,6 +72,11 @@ public class CommentController implements CommunityConstant {
                     .setEntityId(discussPostId)
                     .setUserId(comment.getUserId());
             eventProducer.fireEvent(event);
+
+            // 计算帖子的分数
+            String postScoreKey = RedisKeyUtil.getPostScoreKey();
+            // 应将数据存储在set中，无序的不可重复的数据类型
+            redisTemplate.opsForSet().add(postScoreKey, discussPostId);
         }
 
         return "redirect:/discuss/detail/" + discussPostId;

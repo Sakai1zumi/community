@@ -4,7 +4,7 @@ package com.th1024.community.util;
  * @author izumisakai
  * @create 2022-08-01 21:37
  */
-// 生成点赞这一业务所需要的key
+// 生成Redis业务所需要的key
 public class RedisKeyUtil {
     private static final String SPLIT = ":";
     private static final String PREFIX_ENTITY_LIKE = "like:entity";
@@ -16,6 +16,7 @@ public class RedisKeyUtil {
     private static final String PREFIX_USER = "user";
     private static final String PREFIX_UV = "uv";
     private static final String PREFIX_DAU = "dau";
+    private static final String PREFIX_POST = "post";
 
     // 某个实体的赞
     // like:entity:entityType:entityId -> set(userId)
@@ -74,5 +75,10 @@ public class RedisKeyUtil {
     // 某个日期区间的DAU
     public static  String getDAUKey(String startDate, String endDate) {
         return PREFIX_DAU + SPLIT + startDate +SPLIT + endDate;
+    }
+
+    // 帖子分数
+    public static String getPostScoreKey() {
+        return PREFIX_POST + SPLIT + "score";
     }
 }

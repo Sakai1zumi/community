@@ -1,5 +1,6 @@
 package com.th1024.community.config;
 
+import com.th1024.community.quartz.PostScoreRefreshJob;
 import com.th1024.community.quartz.TestJob;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -43,6 +44,29 @@ public class QuartzConfig {
         factoryBean.setName("testTrigger");
         factoryBean.setGroup("testTriggerGroup");
         factoryBean.setRepeatInterval(3000);
+        factoryBean.setJobDataMap(new JobDataMap());
+        return factoryBean;
+    }
+
+    @Bean
+    public JobDetailFactoryBean postScoreRefreshJobDetail() {
+        JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
+        factoryBean.setJobClass(PostScoreRefreshJob.class);
+        factoryBean.setName("PostScoreRefreshJob");
+        factoryBean.setGroup("communityJobGroup");
+        factoryBean.setDurability(true);// 声明任务是否长久保存
+        factoryBean.setRequestsRecovery(true);
+        return factoryBean;
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean postScoreRefreshTrigger(JobDetail postScoreRefreshJobDetail) {
+        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+
+        factoryBean.setJobDetail(postScoreRefreshJobDetail);
+        factoryBean.setName("postScoreRefreshTrigger");
+        factoryBean.setGroup("communityTriggerGroup");
+        factoryBean.setRepeatInterval(1000 * 60 *5);
         factoryBean.setJobDataMap(new JobDataMap());
         return factoryBean;
     }
