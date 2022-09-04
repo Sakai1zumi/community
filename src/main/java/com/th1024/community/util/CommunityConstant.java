@@ -46,6 +46,9 @@ public interface CommunityConstant {
     // 删帖
     String TOPIC_DELETE = "delete";
 
+    // 分享长图
+    String TOPIC_SHARE = "share";
+
     // 系统用户id
     int SYSTEM_USER_ID = 1;
 
