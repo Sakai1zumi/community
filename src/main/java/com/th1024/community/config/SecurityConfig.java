@@ -66,6 +66,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                 .hasAnyAuthority(
                         AUTHORITY_ADMIN
                 )
+                .antMatchers(
+                        "/actuator/**"
+                )
+                .hasAnyAuthority(
+                        AUTHORITY_ADMIN
+                )
                 .anyRequest().permitAll();
 
         // 权限不够时的处理
